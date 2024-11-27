@@ -1,0 +1,31 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Action déclenchée lorsqu'il y a un push sur la branche "main"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest  # Utilisation d'un runner Ubuntu
+
+    steps:
+      # Étape 1 : Vérifier le code du repository
+      - name: Checkout code
+        uses: actions/checkout@v4  # Checkout du code du repository
+
+      # Étape 2 : Connexion au registre GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io  # Registre GitHub Container Registry
+          username: ${{ github.actor }}  # Utilisateur GitHub (nom d'utilisateur)
+          password: ${{ secrets.GHCR_TOKEN }}  # Jeton d'accès personnel (PAT) configuré dans les secrets du repository
+
+      # Étape 3 : Construire et pousser l'image Docker
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .  # Contexte de construction Docker (répertoire courant)
+          push: true  # Pousser l'image vers le registre
+          tags: ghcr.io/${{ github.repository }}/ue19-lab-05:latest  # Tag de l'image
