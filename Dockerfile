@@ -1,15 +1,14 @@
-# Utiliser une image Python de base
-FROM python:3.9-slim
+# Utilisez l'image de base Python
+FROM python:3
 
 # Définir le répertoire de travail dans le conteneur
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copier les fichiers nécessaires
-COPY requirements.txt requirements.txt
-COPY app.py app.py
+# Copier les fichiers du projet dans le conteneur
+COPY app.py requirements.txt ./
 
 # Installer les dépendances
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Définir la commande par défaut pour exécuter le programme
+# Exécuter l'application
 CMD ["python", "app.py"]
